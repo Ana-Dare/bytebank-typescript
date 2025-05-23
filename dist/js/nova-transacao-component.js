@@ -1,3 +1,4 @@
+console.log("Script nova-transacao-component.js carregado!");
 const elementoFormulario = document.querySelector('.block-nova-transacao form');
 elementoFormulario.addEventListener('submit', function (event) {
     event.preventDefault();
@@ -8,24 +9,24 @@ elementoFormulario.addEventListener('submit', function (event) {
     const inputTipoTransacao = elementoFormulario.querySelector('#tipoTransacao');
     const inputValor = elementoFormulario.querySelector('#valor');
     const inputData = elementoFormulario.querySelector('#data');
-    let TipoTransacao = inputTipoTransacao.value;
+    let tipoTransacao = inputTipoTransacao.value;
     let valor = inputValor.valueAsNumber;
     let data = new Date(inputData.value);
-    if (TipoTransacao == "Depósito") {
+    if (tipoTransacao == TipoTransacao.DEPOSITO) {
         saldo += valor;
     }
-    else if (TipoTransacao == "Transferência" || TipoTransacao == "Pagamento de Boleto") {
+    else if (tipoTransacao == TipoTransacao.TRANSFERENCIA || tipoTransacao == TipoTransacao.PAGAMENTO_BOLETO) {
         saldo -= valor;
     }
     else {
-        alert("Transação inválida!");
+        alert("Tipo detransação inválida!");
         return;
     }
-    elementoSaldo.textContent = saldo.toString();
+    elementoSaldo.textContent = saldo.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
     const novaTransacao = {
-        TipoTransacao: TipoTransacao,
+        tipoTransacao: tipoTransacao,
         valor: valor,
-        data: data
+        data: data,
     };
     console.log(novaTransacao);
     elementoFormulario.reset();
