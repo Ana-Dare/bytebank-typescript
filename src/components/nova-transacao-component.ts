@@ -25,7 +25,7 @@ if(tipoTransacao == TipoTransacao.DEPOSITO){
     return;
 }
 
-elementoSaldo.textContent = saldo.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); 
+elementoSaldo.textContent = formatarMoeda(saldo);
 
 const novaTransacao: Transacao = {
     tipoTransacao: tipoTransacao,
