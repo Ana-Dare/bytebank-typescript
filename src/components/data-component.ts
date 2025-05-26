@@ -16,5 +16,4 @@ const DataComponent = {
         renderizarData();
     },
 };
-
 export default DataComponent;
