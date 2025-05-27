@@ -1,11 +1,12 @@
+import { Armazenador } from "../utils/Armazenador.js";
 import { GrupoTransacao } from "./GrupoTransacao.js";
 import { TipoTransacao } from "./TipoTransacao.js";
 import { Transacao } from "./Transacao.js";
 
 export class Conta {
     protected nome: string
-    protected saldo: number = JSON.parse(localStorage.getItem("saldo")) || 0;
-    private transacoes: Transacao[] = JSON.parse(localStorage.getItem("transacoes"), (key: string, value: any) => {
+    protected saldo: number = Armazenador.obter<number>("saldo") || 0;
+    private transacoes: Transacao[] = Armazenador.obter<Transacao[]>(("transacoes"), (key: string, value: any) => {
         if (key === "data") {
             return new Date(value);
         }
@@ -66,7 +67,7 @@ export class Conta {
         
                 this.transacoes.push(novaTransacao);
                 console.log(this.getGruposTransacoes());
-                localStorage.setItem("transacoes", JSON.stringify(this.transacoes));
+                Armazenador.salvar("transacoes", JSON.stringify(this.transacoes));
         }
 
         private debitar(valor: number): void {
@@ -77,7 +78,7 @@ export class Conta {
                     throw new Error ("Saldo insuficiente!")
                 }
                 this.saldo -= valor;
-                localStorage.setItem("saldo", this.saldo.toString());
+                Armazenador.salvar("saldo", this.saldo.toString());
         }
 
         private depositar(valor: number): void {
@@ -85,11 +86,21 @@ export class Conta {
                     throw new Error ("O valor a ser depositado deve ser maior que zero!")
                 }
                 this.saldo += valor;
-                localStorage.setItem("saldo", this.saldo.toString());
+                Armazenador.salvar("saldo", this.saldo.toString());
         }
 }
 
-const conta = new Conta ("Joana da Silva Oliveira");
-console.log(conta);
+export class ContaPremium extends Conta {
+    
+    registrarTransacao(transacao: Transacao): void {
+        if (transacao.tipoTransacao === TipoTransacao.DEPOSITO) {
+            console.log("Ganhou um bonûs de 0.50 centavos!");
+            transacao.valor += 0.5
+        }
+    super.registrarTransacao(transacao)
+    }
+}
 
+const conta = new Conta ("Joana da Silva Oliveira");
+const contaPremium = new ContaPremium("Ana Laura")
 export default conta;
