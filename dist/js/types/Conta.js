@@ -10,7 +10,9 @@ export class Conta {
     }) || [];
     constructor(nome) {
         this.nome = nome;
-        Conta;
+    }
+    getTitular() {
+        return this.nome;
     }
     getGruposTransacoes() {
         const gruposTransacoes = [];
@@ -73,4 +75,5 @@ export class Conta {
     }
 }
 const conta = new Conta("Joana da Silva Oliveira");
+console.log(conta);
 export default conta;
