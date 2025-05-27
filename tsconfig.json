@@ -2,7 +2,8 @@
     "compilerOptions": {
         "target": "ES2022", // para qual versão js ele deve copilar.
         "outDir": "./dist/js/", // destino dos arquivos compilados.
-        "noEmitOnError": true // se um erro for encontrado não gerar arquivo.
+        "noEmitOnError": true,
+        "experimentalDecorators": true  // se um erro for encontrado não gerar arquivo.
     },
     "include": [
         "./src/**/*" // onde procurar arquivos ts.
