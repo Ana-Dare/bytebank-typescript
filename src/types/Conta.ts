@@ -69,6 +69,7 @@ const Conta = {
         }
          else if (novaTransacao.tipoTransacao == TipoTransacao.TRANSFERENCIA || novaTransacao.tipoTransacao == TipoTransacao.PAGAMENTO_BOLETO) {
             debitar(novaTransacao.valor);
+            novaTransacao.valor *= -1;
         } 
         else {
             throw new Error("Tipo detransação inválida!");
