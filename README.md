@@ -1,4 +1,5 @@
 ByteBank TypeScript
+
 Simulador bancário desenvolvido com TypeScript, focado em reforçar conceitos de lógica e organização de código com base em situações reais do dia a dia.
 
 💡 Sobre o projeto
