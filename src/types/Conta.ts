@@ -1,3 +1,4 @@
+
 import { Armazenador } from "../utils/Armazenador.js";
 import { ValidaDebito, ValidaDeposito } from "./Decorators.js";
 import { GrupoTransacao } from "./GrupoTransacao.js";
@@ -7,12 +8,13 @@ import { Transacao } from "./Transacao.js";
 export class Conta {
     protected nome: string
     protected saldo: number = Armazenador.obter<number>("saldo") || 0;
-    private transacoes: Transacao[] = Armazenador.obter<Transacao[]>(("transacoes"), (key: string, value: any) => {
-        if (key === "data") {
-            return new Date(value);
-        }
+    private transacoes: Transacao[] = (() => {
+    const dados = Armazenador.obter("transacoes", (key, value) => {
+        if (key === "data") return new Date(value);
         return value;
-    }) || [];
+    });
+    return Array.isArray(dados) ? dados : [];
+})();
 
     constructor(nome: string) {
         this.nome = nome;
@@ -43,6 +45,7 @@ export class Conta {
                 gruposTransacoes.at(-1).transacoes.push(transacao)
             }
             return gruposTransacoes;
+
         }
 
         getSaldo() {
@@ -54,6 +57,8 @@ export class Conta {
             return new Date;
         }
 
+        
+
         public registrarTransacao(novaTransacao: Transacao): void {
                 if(novaTransacao.tipoTransacao == TipoTransacao.DEPOSITO) {
                     this.depositar(novaTransacao.valor);
@@ -63,24 +68,24 @@ export class Conta {
                     novaTransacao.valor *= -1;
                 } 
                 else {
-                    throw new Error("Tipo detransação inválida!");
+                    throw new Error("Tipo de transação inválida!");
                 }
         
                 this.transacoes.push(novaTransacao);
                 console.log(this.getGruposTransacoes());
-                Armazenador.salvar("transacoes", JSON.stringify(this.transacoes));
+                Armazenador.salvar("transacoes", (this.transacoes));
         }
 
         @ValidaDebito
         private debitar(valor: number): void {
                 this.saldo -= valor;
-                Armazenador.salvar("saldo", this.saldo.toString());
+                Armazenador.salvar("saldo", this.saldo);
         }
 
         @ValidaDeposito
         private depositar(valor: number): void {
                 this.saldo += valor;
-                Armazenador.salvar("saldo", this.saldo.toString());
+                Armazenador.salvar("saldo", this.saldo);
         }
 }
 
@@ -98,3 +103,5 @@ export class ContaPremium extends Conta {
 const conta = new Conta ("Joana da Silva Oliveira");
 const contaPremium = new ContaPremium("Ana Laura")
 export default conta;
+
+

@@ -10,12 +10,14 @@ import { TipoTransacao } from "./TipoTransacao.js";
 export class Conta {
     nome;
     saldo = Armazenador.obter("saldo") || 0;
-    transacoes = Armazenador.obter(("transacoes"), (key, value) => {
-        if (key === "data") {
-            return new Date(value);
-        }
-        return value;
-    }) || [];
+    transacoes = (() => {
+        const dados = Armazenador.obter("transacoes", (key, value) => {
+            if (key === "data")
+                return new Date(value);
+            return value;
+        });
+        return Array.isArray(dados) ? dados : [];
+    })();
     constructor(nome) {
         this.nome = nome;
     }
@@ -58,19 +60,19 @@ export class Conta {
             novaTransacao.valor *= -1;
         }
         else {
-            throw new Error("Tipo detransação inválida!");
+            throw new Error("Tipo de transação inválida!");
         }
         this.transacoes.push(novaTransacao);
         console.log(this.getGruposTransacoes());
-        Armazenador.salvar("transacoes", JSON.stringify(this.transacoes));
+        Armazenador.salvar("transacoes", (this.transacoes));
     }
     debitar(valor) {
         this.saldo -= valor;
-        Armazenador.salvar("saldo", this.saldo.toString());
+        Armazenador.salvar("saldo", this.saldo);
     }
     depositar(valor) {
         this.saldo += valor;
-        Armazenador.salvar("saldo", this.saldo.toString());
+        Armazenador.salvar("saldo", this.saldo);
     }
 }
 __decorate([

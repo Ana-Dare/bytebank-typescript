@@ -3,7 +3,9 @@ import DataComponent from "./data-component.js";
 import Conta from "../types/Conta.js";
 import ExtratoComponent from "./extrato-components.js";
 const elementoFormulario = document.querySelector('.block-nova-transacao form');
+console.log(elementoFormulario);
 elementoFormulario.addEventListener('submit', function (event) {
+    console.log("asgdf");
     try {
         event.preventDefault();
         if (!elementoFormulario.checkValidity()) {
@@ -15,7 +17,8 @@ elementoFormulario.addEventListener('submit', function (event) {
         const inputData = elementoFormulario.querySelector('#data');
         let tipoTransacao = inputTipoTransacao.value;
         let valor = inputValor.valueAsNumber;
-        let data = new Date(inputData.value + "00:00:00");
+        console.log(inputData.value + "00:00:00");
+        let data = new Date(inputData.value);
         const novaTransacao = {
             tipoTransacao: tipoTransacao,
             valor: valor,
